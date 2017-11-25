@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Notester</title>
+  <link rel="icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Bad+Script|Caveat|Courgette|Indie+Flower|Marck+Script" rel="stylesheet">
 </head>
 
@@ -96,20 +97,20 @@ span.binding {
 
 <body>
   <div class="notepad">
-    <div class="bottom">
-      <button id='back'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 12l18-12v24z"/></svg></button
-      ><button id='forward'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 12l-18 12v-24z"/></svg></button>
-      <h1 id='pg'>1</h1>
-    </div>
     <script>
     (function(){
       for(var i = 0;i<11;i++){
-        document.write("<span class='binding' style='top: " + ((i * 6.5)+5) + "vh;'></span><input type='text' class='" + i + "' spellcheck='false' onkeydown='entercheck(event,this);'><div class='bottomnote'></div>");
+        document.write("<span class='binding' style='top: " + ((i * 6.5)+5) + "vh;'></span><input type='text' class='" + i + "' spellcheck='false' onkeydown='checkkeys(event,this);' oninput='checkinput(this);'><div class='bottomnote'></div>");
       }
       document.write("<span class='binding' style='top: " + ((12 * 6.5)+5) + "vh;'></span>");
       document.write("<span class='binding' style='top: " + ((11 * 6.5)+5) + "vh;'></span>");
     })();
     </script>
+    <div class="bottom">
+      <button onclick='pageChange(-1);'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 12l18-12v24z"/></svg></button
+      ><button onclick='pageChange(1);'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 12l-18 12v-24z"/></svg></button>
+      <h1 id='pg'>1</h1>
+    </div>
   </div>
 </body>
 

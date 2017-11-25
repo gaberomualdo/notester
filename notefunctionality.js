@@ -47,7 +47,7 @@ function setCaretToPos (input, pos) {
 }
 
 
-function entercheck(e,input){
+function checkkeys(e,input){
   if(e.keyCode == 13){
     var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))+1)[0];
     if(newinput && newinput.value.length<=0){
