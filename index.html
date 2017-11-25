@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Notester</title>
+  <link href="https://fonts.googleapis.com/css?family=Bad+Script|Caveat|Courgette|Indie+Flower|Marck+Script" rel="stylesheet">
+</head>
+
+<style>
+
+*{
+  margin: 0;
+  padding: 0;
+  font-family: "Caveat";
+}
+
+body {
+  background-color: #efefef;
+}
+
+.notepad {
+  position: absolute;
+  height: 89vh;
+  top: 5vh;
+  left: calc(65vw/2);
+  width: 35vw;
+  background-color: #fff;
+  padding: 2.5vh 0;
+  box-sizing: border-box;
+}
+.notepad input{
+  border: none;
+  outline: none;
+  font-size: 5vh;
+  width: 30vw;
+  margin: 0 2.5vw;
+  padding: 0;
+  float: left;
+  height: 6vh;
+}
+div.bottomnote {
+  width: 30vw;
+  margin: 0.125vh 2.5vw;
+  background-color: #ccc;
+  padding: 0;
+  float: left;
+}
+span.binding {
+  position: absolute;
+  background-color: black;
+  width: 2.5vw;
+  height: 7px;
+  left: -1.25vw;
+  border-radius: 20000px;
+}
+.bottom {
+  position: absolute;
+  right: 2.5vh;
+  bottom: 0;
+}
+.bottom h1 {
+  line-height: 10vh;
+  font-size: 7.5vh;
+}
+.bottom button,.bottom h1 {
+  display: inline-block;
+}
+.bottom button {
+  background-color: transparent;
+  border: none;
+  height: 10vh;
+  width: auto;
+  outline: none;
+  padding: 0 0.25vw;
+}
+.bottom button svg path {
+  fill: #999;
+}
+.bottom button:hover svg {
+  transform: scale(1.2);
+}
+.bottom button:hover svg path {
+  fill: black;
+}
+</style>
+
+<script>
+
+(function(){
+  document.write("<style>div.bottomnote{height: " + (Math.floor(window.innerHeight*0.0075)) +"px;}</style>");
+})();
+
+</script>
+
+<body>
+  <div class="notepad">
+    <div class="bottom">
+      <button id='back'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 12l18-12v24z"/></svg></button
+      ><button id='forward'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 12l-18 12v-24z"/></svg></button>
+      <h1 id='pg'>1</h1>
+    </div>
+    <script>
+    (function(){
+      for(var i = 0;i<11;i++){
+        document.write("<span class='binding' style='top: " + ((i * 6.5)+5) + "vh;'></span><input type='text' class='" + i + "' spellcheck='false' onkeydown='entercheck(event,this);'><div class='bottomnote'></div>");
+      }
+      document.write("<span class='binding' style='top: " + ((12 * 6.5)+5) + "vh;'></span>");
+      document.write("<span class='binding' style='top: " + ((11 * 6.5)+5) + "vh;'></span>");
+    })();
+    </script>
+  </div>
+</body>
+
+<script>
+// Get Cursor position within textbox, copied from https://stackoverflow.com/questions/2897155/get-cursor-position-in-characters-within-a-text-input-field
+function getPosition (oField) {
+
+  // Initialize
+  var iCaretPos = 0;
+
+  // IE Support
+  if (document.selection) {
+
+    // Set focus on the element
+    oField.focus();
+
+    // To get cursor position, get empty selection range
+    var oSel = document.selection.createRange();
+
+    // Move selection start to 0 position
+    oSel.moveStart('character', -oField.value.length);
+
+    // The caret position is selection length
+    iCaretPos = oSel.text.length;
+  }
+
+  // Firefox support
+  else if (oField.selectionStart || oField.selectionStart == '0')
+    iCaretPos = oField.selectionStart;
+
+  // Return results
+  return iCaretPos;
+}
+// Set Cursor position within textbox, copied from https://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
+function setSelectionRange(input, selectionStart, selectionEnd) {
+  if (input.setSelectionRange) {
+    input.focus();
+    input.setSelectionRange(selectionStart, selectionEnd);
+  }
+  else if (input.createTextRange) {
+    var range = input.createTextRange();
+    range.collapse(true);
+    range.moveEnd('character', selectionEnd);
+    range.moveStart('character', selectionStart);
+    range.select();
+  }
+}
+
+function setCaretToPos (input, pos) {
+  setSelectionRange(input, pos, pos);
+}
+
+
+function entercheck(e,input){
+  if(e.keyCode == 13){
+    var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))+1)[0];
+    if(newinput && newinput.value.length<=0){
+      newinput.focus();
+      setCaretToPos(newinput,0);
+    }
+  }
+  if(e.keyCode == 37){
+    if(getPosition(input)==0){
+      var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))-1)[0];
+      if(newinput){
+        e.preventDefault();
+        newinput.focus();
+        setCaretToPos(newinput,newinput.value.length);
+      }
+    }
+  }
+  if(e.keyCode == 39){
+    if(getPosition(input)==input.value.length){
+      var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))+1)[0];
+      if(newinput){
+        e.preventDefault();
+        newinput.focus();
+        setCaretToPos(newinput,0);
+      }
+    }
+  }
+  if(e.keyCode == 40 || e.keyCode == 38){
+    e.preventDefault();
+  }
+  if(e.keyCode == 40){
+    var current = getPosition(input);
+    var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))+1)[0];
+    if(newinput){
+      newinput.focus();
+      setCaretToPos(newinput,current);
+    }
+  }
+  if(e.keyCode == 38){
+    var current = getPosition(input);
+    var newinput = document.getElementsByClassName(parseInt(input.getAttribute("class"))-1)[0];
+    if(newinput){
+      newinput.focus();
+      setCaretToPos(newinput,current);
+    }
+  }
+}
+
+</script>
+
+</html>
